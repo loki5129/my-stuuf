@@ -1,0 +1,31 @@
+h1 {
+color: green; /* text color */
+background-color: black; /* background color */
+}
+.blue {
+color: blue;
+}
+table, th, td {
+  border: 1px solid black;
+}
+button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.highlighted {
+background-color: yellow !important;
+}
+h2 {
+  color: pink;
+  background-color: black;
+}
+h3 {
+  color:purple;
+  background-color: black;
+}
