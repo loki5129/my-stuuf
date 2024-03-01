@@ -1,7 +1,7 @@
 from urllib.request import urlopen
-import time 
 import re
-from xml.dom import minidom
+import datetime
+import math
 file=open("weather.xml", "w")
 url = "https://www.met.ie/Open_Data/xml/Met-Sea-area.xml"
 page = urlopen(url)
@@ -166,6 +166,35 @@ ___xml_content[13:16] = ['\n', '\n', '\n']
 with open(xml_file_path, 'w') as file:
     file.writelines(___xml_content)
 
+file=open("weather.xml","a")
+url="https://www.met.ie/Open_Data/json/warning_IRELAND.json"
+page=urlopen(url)
+html = page.read().decode("utf-8")
+start_index= html.find("<body>") +len("<body>")
+end_index = html.find("</body>")
+title = html[start_index:end_index]
+file.write(title)
+file.close
+
+new_lines = [
+    '\n',
+    '\n',
+    '\n'
+]
+
+# Read the original content of the XML file
+with open(xml_file_path, 'r') as file:
+    lines = file.readlines()
+
+# Insert the new lines after line 61 (index 60 in Python)
+index_to_insert = 63
+for new_line in new_lines:
+    lines.insert(index_to_insert, new_line)
+    index_to_insert += 1
+
+# Write the modified content back to the XML file
+with open(xml_file_path, 'w') as file:
+    file.writelines(lines)
 
 
 file=open("weather.xml", "a")
@@ -188,12 +217,22 @@ def extract_and_remove_attributes(xml_line, attributes_to_keep):
     modified_line =  ' '.join([f'{key}="{value}"' for key, value in attribute_matches if key in attributes_to_keep]) + '\n'
     return modified_line
 
+with open(xml_file_path, 'r') as file:
+    content = file.read()
+
+# Remove all { and } characters
+content_without_braces = content.replace('{', '').replace('}', '')
+
+# Write the modified content back to the XML file
+with open(xml_file_path, 'w') as file:
+    file.write(content_without_braces)
+
 # Read the content of the file
 with open(xml_file_path, 'r') as file:
     lines = file.readlines()
 
 # Get the 17th line
-line_number_to_modify = 16  # Python uses 0-based indexing
+line_number_to_modify = 66  # Python uses 0-based indexing
 line_to_modify = lines[line_number_to_modify]
 
 # Specify attributes to keep
@@ -241,101 +280,35 @@ with open(xml_file_path, 'w') as modified_file:
     modified_file.write(modified_content)
 
 
+# Get today's date and time
+today = datetime.datetime.now()
 
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        current = "".join(lines[19:38])
-        
-        print("Content of currnet :done")
-        #print(current)
+# Round up to the next hour
+rounded_today = today+datetime.timedelta(hours=1)
+rounded_today = rounded_today.replace(minute=0, second=0, microsecond=0)
 
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
+# Format the date and time as year-month-day hour:minute:second
+formatted_today = rounded_today.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-
-
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        day_1_hr_1 = "".join(lines[41:61])
-        
-        print("Content of day_1_hr_1 variable:done")
-        #print(day_1_hr_1)
-
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
+# Your variable to compare
+current_date_time = formatted_today  # Replace this with your actual variable
+print(current_date_time)
+# Check if the variable matches today's rounded-up date and time
+# Specify the path to your file
 
 
+# Variable to search for
+search_variable = 'from='
+search_variable2="to="
+found_lines=[]
+with open(xml_file_path, 'r') as file:
+    for line_number, line in enumerate(file, start=1):
+        if search_variable and search_variable2 in line and current_date_time in line and line.count(current_date_time) == 2:
+            print(f"Line {line_number}: {line.strip()}")
+            for _ in range(19):
+                found_lines.append(next(file).strip())
 
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        day_1_hr_2 = "".join(lines[63:82])
-        
-        print("Content of day_1_hr_2 variable:done")
-        #print(day_1_hr_2)
-
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
-
-
-
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        day_1_hr_3 = "".join(lines[85:104])
-        
-        print("Content of day_1_hr_3 variable:done")
-        #print(day_1_hr_3)
-
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
-
-
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        day_1_hr_4 = "".join(lines[107:126])
-        
-        print("Content of day_1_hr_4 variable:done")
-        #print(day_1_hr_4)
-
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
-
-try:
-    with open(xml_file_path, 'r') as file:
-        lines = file.readlines()
-        
-        # Extract lines 20 to 35
-        day_1_hr_5 = "".join(lines[129:148])
-        
-        print("Content of day_1_hr_5 variable:done")
-        #print(day_1_hr_5)
-
-except FileNotFoundError:
-    print(f"File not found at path: {xml_file_path}")
-except Exception as e:
-    print(f"An error occurred: {e}")
-
+# Now found_lines contains the next 19 lines after the match
+print("Found lines:")
+for idx, line in enumerate(found_lines, start=1):
+    print(f"{line}")
